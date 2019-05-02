@@ -61,11 +61,10 @@ dialogflow2.setConfiguration = async function (clientEmail, privateKey, language
     }
 
     Voice.onSpeechEnd = (c) => {
-
         if (dialogflow2.speechResult) {
             dialogflow2.requestQuery(dialogflow2.speechResult[0], dialogflow2.onResult, dialogflow2.onError);
         }
-
+        dialogflow2.ended = true
         if (dialogflow2.onListeningFinished) {
             dialogflow2.onListeningFinished(c);
         }
@@ -80,6 +79,9 @@ dialogflow2.setConfiguration = async function (clientEmail, privateKey, language
     Voice.onSpeechResults = (result) => {
         if (result.value) {
             dialogflow2.speechResult = result.value;
+            if (dialogflow2.ended) {
+                dialogflow2.requestQuery(dialogflow2.speechResult[0], dialogflow2.onResult, dialogflow2.onError);
+            }
         }
     }
 }
@@ -88,6 +90,7 @@ dialogflow2.startListening = function (onResult, onError) {
     dialogflow2.onResult = onResult;
     dialogflow2.onError = onError;
 
+    dialogflow2.ended = false
     Voice.start(dialogflow2.languageTag);
 }
 
