@@ -63,8 +63,9 @@ dialogflow2.setConfiguration = async function (clientEmail, privateKey, language
     Voice.onSpeechEnd = (c) => {
         if (dialogflow2.speechResult) {
             dialogflow2.requestQuery(dialogflow2.speechResult[0], dialogflow2.onResult, dialogflow2.onError);
+        } else {
+            dialogflow2.ended = true
         }
-        dialogflow2.ended = true
         if (dialogflow2.onListeningFinished) {
             dialogflow2.onListeningFinished(c);
         }
